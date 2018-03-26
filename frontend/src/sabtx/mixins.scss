@@ -103,7 +103,7 @@
   transform: translateY( -$pickup / 2);
 }
 
-@mixin border($width: 1px, $color: #000000){
+@mixin border($color: black, $width: 1px){
   border: solid $width $color;
 }
 

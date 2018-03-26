@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import * as EventSource from 'eventsource';
 import {Hand} from "./model";
+import {Subject} from "rxjs/Subject";
+import {Store} from "@ngrx/store";
+import {AppState} from "./store/state";
 
 @Component({
   selector: 'app-root',
@@ -9,17 +12,21 @@ import {Hand} from "./model";
 })
 export class AppComponent implements OnInit {
 
-  title = 'app';
+  eventBus: Subject<any>;
+
+  constructor(private store: Store<AppState>){}
 
   ngOnInit(): void {
 
-    const emitter = new EventSource('http://localhost:8080/events');
+    // const emitter = new EventSource('http://localhost:8080/events');
+    // this.eventBus = new Subject();
+    //
+    // emitter.onmessage = event => {
+    //
+    //   let data: Hand = JSON.parse(event.data);
+    //   this.eventBus.next(data);
+    // }
 
-    emitter.onmessage = event => {
-
-      let data: Hand = JSON.parse(event.data);
-      console.log(data);
-    }
   }
 
 

@@ -1,7 +1,15 @@
 import {Action} from "@ngrx/store";
+import {Tokens, User} from "../../model";
 
-export const SAY_HELLO = 'SAY_HELLO';
-export class SayHelloAction implements Action {
-  readonly type = SAY_HELLO;
-  constructor(public name: string) {}
+export const USER_LOGIN_SUBMIT = 'USER_LOGIN_SUBMIT';
+export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
+export const USER_LOGIN_FAILURE = 'USER_LOGIN_FAILURE';
+export const LOGOUT = 'LOGOUT';
+
+export interface LoginAction extends Action {
+  payload?: User | string | Tokens;
 }
+
+export const loginSubmit = (user: User): LoginAction => ({ type : USER_LOGIN_SUBMIT, payload : user });
+export const loginSuccess = (user: User): LoginAction => ({ type : USER_LOGIN_SUCCESS, payload : user });
+export const loginFailure = (errorMessage): LoginAction => ({ type : USER_LOGIN_FAILURE, payload : errorMessage });

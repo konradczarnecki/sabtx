@@ -1,7 +1,1 @@
 @import "sx-style";
-
-#square {
-  @include size(360px, 480px);
-  @include absolute-center;
-  @include mdc-elevation(10);
-}
