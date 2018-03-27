@@ -11,9 +11,10 @@ const user = (state: User, action: LoginAction): User => {
 
     case USER_LOGIN_SUCCESS:
       const tokens = <Tokens> action.payload;
+      console.log(tokens);
       if(!tokens.access_token || !tokens.refresh_token) return null;
       localStorage.setItem('token', tokens.access_token);
-      localStorage.setItem('refresh_token', tokens.refresh_token)
+      localStorage.setItem('refresh_token', tokens.refresh_token);
       return state;
 
     case USER_LOGIN_FAILURE:

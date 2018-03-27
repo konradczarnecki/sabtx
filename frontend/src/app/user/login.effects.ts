@@ -5,7 +5,7 @@ import {Actions, Effect, ofType} from "@ngrx/effects";
 import {HttpClient} from "@angular/common/http";
 import {LoginAction, loginFailure, loginSuccess, USER_LOGIN_SUBMIT} from "../store/actions/main";
 import {catchError, map, mergeMap} from "rxjs/operators";
-import {User, Response} from "../model";
+import {User, Response, Tokens} from "../model";
 import {environment as env} from "../../environments/environment";
 import {of} from "rxjs/observable/of";
 
@@ -20,8 +20,8 @@ export class LoginEffects {
     ofType(USER_LOGIN_SUBMIT),
     mergeMap((action: LoginAction) =>
 
-      this.http.post<Response<User>>(env.endpoints.token, action.payload).pipe(
-        map(rsp => rsp.status === 'success' ? loginSuccess(rsp.data) : loginFailure(rsp.message)),
+      this.http.post<Tokens>(env.apiUrl + env.endpoints.token, action.payload).pipe(
+        map(tokens => !!tokens.access_token ? loginSuccess(tokens) : loginFailure("Auth failure")),
         catchError(err => of(loginFailure(err)))
       )
     )

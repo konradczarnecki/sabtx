@@ -11,5 +11,5 @@ export interface LoginAction extends Action {
 }
 
 export const loginSubmit = (user: User): LoginAction => ({ type : USER_LOGIN_SUBMIT, payload : user });
-export const loginSuccess = (user: User): LoginAction => ({ type : USER_LOGIN_SUCCESS, payload : user });
+export const loginSuccess = (tokens: Tokens): LoginAction => ({ type : USER_LOGIN_SUCCESS, payload : tokens });
 export const loginFailure = (errorMessage): LoginAction => ({ type : USER_LOGIN_FAILURE, payload : errorMessage });
