@@ -1,9 +1,11 @@
 import {Routes} from "@angular/router";
-import {LoginComponent} from "./user/login.component";
-import {UserService} from "./user/user.service";
 import {HomeComponent} from "./home/home.component";
+import LoginFeature from "../sabtx/login";
 
-export const routes: Routes = [
-  { path : 'login', component: LoginComponent },
-  { path : '', component: HomeComponent, pathMatch : 'full', canActivate : [UserService]}
+let routes: Routes = [
+  { path : '', component: HomeComponent, pathMatch : 'full'}
 ];
+
+// LoginFeature.addGuard(routes, []);
+
+export {routes};

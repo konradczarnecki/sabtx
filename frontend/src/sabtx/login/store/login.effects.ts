@@ -3,11 +3,14 @@ import {Observable} from "rxjs/Observable";
 import {Action} from "@ngrx/store";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {HttpClient} from "@angular/common/http";
-import {LoginAction, loginFailure, loginSuccess, USER_LOGIN_SUBMIT} from "../store/actions/main";
-import {catchError, map, mergeMap} from "rxjs/operators";
-import {User, Response, Tokens} from "../model";
-import {environment as env} from "../../environments/environment";
+import {catchError, map, mergeMap, tap} from "rxjs/operators";
+import {User, Response, Tokens} from "../../../app/model/model";
+import {environment as env} from "../../../environments/environment";
 import {of} from "rxjs/observable/of";
+import {Router} from "@angular/router";
+import * as RouterActions from '../../router/actions';
+import {LoginAction, loginFailure, loginSuccess, USER_LOGIN_SUBMIT, USER_LOGIN_SUCCESS} from "./store";
+
 
 @Injectable()
 export class LoginEffects {
@@ -25,5 +28,12 @@ export class LoginEffects {
         catchError(err => of(loginFailure(err)))
       )
     )
-  )
+  );
+
+  @Effect()
+  loginRouting$: Observable<Action> = this.actions$.pipe(
+
+    ofType(USER_LOGIN_SUCCESS),
+    map(action => new RouterActions.Go({path: ['/']}))
+  );
 }

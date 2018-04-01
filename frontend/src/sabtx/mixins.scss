@@ -97,6 +97,11 @@
   margin: auto;
 }
 
+@mixin fullscreen(){
+  @include size(100vw, 100vh);
+  @include absolute(0, null, null, 0);
+}
+
 @mixin pick-up($width, $height, $pickup: 2px){
   width: $width + $pickup;
   height: $height + $pickup;

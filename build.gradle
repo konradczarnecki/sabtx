@@ -4,24 +4,27 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('org.hidetake:gradle-ssh-plugin:2.9.0')
+
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.hidetake.ssh'
 
 group = 'konra'
-version = '0.0.1-SNAPSHOT'
+version = '0.1'
 sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
 }
-
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -38,4 +41,64 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('io.projectreactor:reactor-test')
 	testCompile('org.springframework.security:spring-security-test')
+}
+
+task buildFront(type: Exec) {
+	group 'frontend'
+	workingDir = "$projectDir/frontend"
+	commandLine = ['cmd', '/c', 'ng', 'build', '--prod']
+	inputs.files fileTree("$projectDir/frontend/src")
+	outputs.dir "$projectDir/frontend/dist"
+}
+
+task copyWebcontent(type: Copy) {
+	from "$projectDir/frontend/dist"
+	into "$projectDir/src/main/resources/static"
+	include '*'
+	dependsOn buildFront
+}
+
+jar.dependsOn copyWebcontent
+jar.outputs.upToDateWhen {false}
+
+task cleanFront(type: Delete) {
+	group 'frontend'
+	delete file('frontend/dist')
+}
+
+clean.dependsOn cleanFront
+
+remotes {
+	droplet {
+		host = '138.197.178.123'
+		user = 'root'
+		identity = file(project.property('key.path'))
+	}
+}
+
+ssh.settings {
+	knownHosts = allowAnyHosts
+}
+
+def deployPath = project.property('deploy.path')
+def packageName = "${project.name}-${project.version}.jar";
+
+task deploy {
+	group 'app'
+
+	doLast {
+		ssh.run {
+
+			session(remotes.droplet) {
+				execute "sudo rm -rf ${deployPath}/*"
+				execute "curl -X POST http://localhost:${port}/actuator/shutdown"
+				execute "sleep 1"
+				put from: "build/libs/$packageName", into: "${deployPath}/"
+				execute "nohup java -jar ${deployPath}/${packageName} &"
+			}
+		}
+	}
+
+	inputs.files file("build/libs/$packageName")
+	dependsOn build
 }

@@ -1,16 +1,5 @@
 @import "vars";
 
-.formControl {
-  @include size(280px, 40px);
-  @include border($border-clr);
-  border-radius: $corner-rad;
-  background: linear-gradient(130deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-}
 
-.button {
-  @include size(280px, 40px);
-  @include mdc-elevation(2);
-  @include border($border-clr);
-  border-radius: $corner-rad;
-  background: linear-gradient(130deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15));
-}
+
+

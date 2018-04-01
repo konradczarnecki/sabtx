@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import {AppState} from "../store/state";
-import {Store} from "@ngrx/store";
-import {CanActivate} from "@angular/router";
-import {User} from "../model";
-import {Observable} from "rxjs/Observable";
+import {AppState} from "../../../app/store/state";
+import {select, Store} from "@ngrx/store";
+import {CanActivate, Routes} from "@angular/router";
+import {User} from "../../../app/model/model";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {loginSubmit} from "../store/actions/main";
+import {loginSubmit} from "../store/store";
+import * as RouterActions from '../../router/actions';
+import {selectUser} from "../store/store";
 
 @Injectable()
 export class UserService implements CanActivate {
@@ -14,7 +15,7 @@ export class UserService implements CanActivate {
 
   constructor(private store: Store<AppState>) {
     this.user = new BehaviorSubject(null);
-    store.select('user').subscribe(user => this.user.next(user));
+    store.pipe(select(selectUser)).subscribe(user => this.user.next(user));
   }
 
   login(username: string, password: string) {
@@ -32,6 +33,9 @@ export class UserService implements CanActivate {
   }
 
   canActivate(): boolean {
-    return this.userLogged();
+    let logged = this.userLogged();
+    if(!logged) this.store.dispatch(new RouterActions.Go({path: ['/login']}));
+    return logged;
   }
 }
+

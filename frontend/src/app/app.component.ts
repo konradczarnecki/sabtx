@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as EventSource from 'eventsource';
-import {Hand} from "./model";
+import {Hand} from "./model/model";
 import {Subject} from "rxjs/Subject";
 import {Store} from "@ngrx/store";
 import {AppState} from "./store/state";

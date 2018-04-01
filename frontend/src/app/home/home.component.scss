@@ -1,0 +1,7 @@
+@import "sx-style";
+
+div {
+  @include size(240px, 120px);
+  color: black;
+  font-size: 30px;
+}

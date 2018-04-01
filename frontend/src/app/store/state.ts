@@ -1,5 +1,8 @@
-import {User} from "../model";
+import LoginState from '../../sabtx/login/store/store';
 
 export interface AppState {
-  user: User;
+  // route: string;
+  login: LoginState;
 }
+
+
